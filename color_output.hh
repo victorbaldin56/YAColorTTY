@@ -1,20 +1,11 @@
 #pragma once
 
-#ifndef _WIN_32
-#include <unistd.h>
-#define YA_COLOR_TTY_ISATTY isatty
-#else
-#include <io.h>
-#define YA_COLOR_TTY_ISATTY _isatty
-#endif // _WIN_32
-
-#include <iostream>
 #include <string>
 
 namespace ctty {
 
-enum class FontType {
-  kNormal = 0,
+enum class Attribute {
+  kReset = 0,
   kBold   = 1,
 };
 
@@ -28,5 +19,13 @@ enum class Color {
   kCyan    = 36,
   kWhite   = 37,
 };
+
+inline std::string setAttr(Attribute attr = Attribute::kReset,
+                           Color color = Color::kReset) {
+  return "\x1b[" + std::to_string(static_cast<int>(attr)) + ";"
+              + std::to_string(static_cast<int>(color)) + "m";
+}
+
+inline std::string resetAttr() { return setAttr(); }
 
 } // namespace ctty
